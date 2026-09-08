@@ -104,6 +104,7 @@ export default function Collection() {
 
     return () => ctx.revert();
   }, []);
+  
 
   return (
     <section className="collection" ref={rootRef}>

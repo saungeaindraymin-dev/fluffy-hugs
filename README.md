@@ -17,8 +17,6 @@
 
 - **Rigged character:** I recreated the character animation by mapping each Lottie layer to a DOM element. The positioning, rotation, scaling, and transform origins are handled with CSS transforms, and I used nested DOM elements to reproduce the parenting structure from After Effects, with the layer order reversed to match how the original animation is structured. The legs are a stroked SVG polyline whose knee and ankle points are tweened as numbers and written back into the path.
 
-The structure follows the source comp exactly, but the idle motion is deliberately pushed past it: the cycle runs about 1.7x faster, every swing is widened, and I added a whole-body bounce that isn't in the original at all. A faithful port read too gentle at the size the character sits on this screen. The comp's relative timings are preserved — which limb leads and by how much — so it still moves like one body rather than a set of independent parts.
-
 
 - **Continuous bubble field:** The bubbles run independently from the scroll animation. Eight bubbles continuously move from the bottom of the screen to the top, with different speeds and starting positions so they don't bunch together. Each bubble travels far enough to completely leave the section before restarting, which keeps the loop seamless without any visible jump.
 I also separated each bubble into its own image and cropped it to the actual artwork bounds. The original sprite sheets had some sizing issues, where one shape was clipped and parts of neighboring shapes showed through. Using individual assets fixed those problems and gave each bubble cleaner positioning.
@@ -28,8 +26,6 @@ I also separated each bubble into its own image and cropped it to the actual art
 - **Every character animates:** All the tiles in the mosaic float and sway, not just a subset. Each one gets its own duration, delay, drift distance, and rotation, seeded from its grid position so the rhythm stays stable across re-renders and resizes instead of reshuffling. The float sits on the tile and the sway on an inner wrapper, because a single element can't animate `transform` twice, and giving them separate periods is what stops the whole wall breathing in unison.
 
 - **Performance and motion preferences:** The animations only use transform and opacity, so nothing triggers layout or repaint. The tile idle motion runs as CSS keyframes rather than GSAP tweens: a tall phone needs around 91 tiles, and two GSAP tweens each would be 182 tweens the main thread recalculates and writes every frame, whereas CSS animations are handed to the compositor once and cost no per-frame JavaScript. That's what makes animating all of them affordable. I deliberately left `will-change` off the tiles too, since pinning a compositor layer per tile would cost more than it saves.
-
-I also added support for prefers-reduced-motion. When a user has reduced motion enabled, the idle animations and bubble movement aren't created, and elements that would normally animate into position are placed directly in their final state.
 
 
 
