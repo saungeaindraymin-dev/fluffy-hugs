@@ -2,8 +2,8 @@
 
 > Recreated three animation-heavy screens from **[nft.fluffyhugs.io](https://nft.fluffyhugs.io)** using Vite, React, GSAP, and SCSS. The project includes an asset-gated loading screen, a full-screen character mosaic, and a collection screen with a floating character and animated bubbles. All three screens are connected through one smooth, scroll-driven transition.
 
-- **Repository:** https://github.com/saungeaindraymin-dev/fluffy-hubs.git
-- **Live demo:** [fluffy-hubs.vercel.app](https://fluffy-hubs.vercel.app)
+- **Repository:** https://github.com/saungeaindraymin-dev/fluffy-hugs.git
+- **Live demo:** [fluffy-hugs-five.vercel.app](https://fluffy-hugs-five.vercel.app)
 
 ## Core Features
 
