@@ -1,0 +1,29 @@
+# dependencies
+node_modules/
+
+# build output (regenerate with `npm run build`; Vercel/Netlify build it themselves)
+dist/
+dist-ssr/
+
+# logs
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+logs/
+*.log
+
+# editor / OS
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# env
+.env
+.env.local
+.env.*.local

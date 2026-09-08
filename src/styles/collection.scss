@@ -1,0 +1,142 @@
+@use "./tokens" as *;
+
+.collection {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow: hidden;
+  background:
+    radial-gradient(100% 70% at 12% 6%, #fffdf9 0%, rgba(255, 253, 249, 0) 55%),
+    linear-gradient(170deg, var(--hero-bg) 0%, #fdf5ec 55%, #fbeee2 100%);
+}
+
+.collection-blobs {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.blob-drift {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.blob {
+  position: absolute;
+  top: 0;
+  display: block;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+/* Each bubble is its own file, cut to the artwork's exact alpha bounding box,
+   so the aspect-ratio below IS the real pixel ratio — nothing is clipped and
+   nothing bleeds in from a neighbour.
+
+   The previous sprite-slice percentages were approximations: b1 was given a
+   990px-tall slice against a blob that is actually 1024px, and the bounding
+   boxes of blobs 4 and 5 overlap by a pixel column, so slicing showed a sliver
+   of the wrong shape (85 and 39 stray pixels, measured).
+
+   Vertical placement is deliberately uniform: every bubble travels the full
+   section height, so its rendered range works out to H..-h regardless of where
+   it starts in the box. Position in the cycle is set by PHASE in the component;
+   only the horizontal column is set here. */
+.blob-b4 {
+  background-image: url("/images/bubble4.webp");
+  aspect-ratio: 683 / 676;
+  width: clamp(130px, 16vw, 400px);
+  left: -6%;
+}
+
+.blob-b7 {
+  background-image: url("/images/bubble3.webp");
+  aspect-ratio: 683 / 568;
+  width: clamp(100px, 11vw, 190px);
+  left: 8%;
+}
+
+.blob-b6 {
+  background-image: url("/images/bubble4.webp");
+  aspect-ratio: 683 / 676;
+  width: clamp(110px, 13vw, 300px);
+  left: 22%;
+}
+
+.blob-b2 {
+  background-image: url("/images/bubble2.webp");
+  aspect-ratio: 640 / 1024;
+  width: clamp(105px, 12vw, 200px);
+  left: 40%;
+}
+
+.blob-b1 {
+  background-image: url("/images/bubble1.webp");
+  aspect-ratio: 358 / 1024;
+  width: clamp(95px, 11vw, 190px);
+  left: 58%;
+}
+
+.blob-b8 {
+  background-image: url("/images/bubble5.webp");
+  aspect-ratio: 684 / 892;
+  width: clamp(120px, 14vw, 245px);
+  right: 30%;
+}
+
+.blob-b3 {
+  background-image: url("/images/bubble3.webp");
+  aspect-ratio: 683 / 568;
+  width: clamp(120px, 13.5vw, 225px);
+  right: -4%;
+}
+
+.blob-b5 {
+  background-image: url("/images/bubble5.webp");
+  aspect-ratio: 684 / 892;
+  width: clamp(175px, 20vw, 350px);
+  right: -8%;
+}
+
+.collection-wordmark {
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  z-index: 2;
+  width: min(86vw, 1400px);
+  height: auto;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+/* tablet */
+@include tablet {
+  .collection-wordmark {
+    top: 37%;
+    width: 88vw;
+  }
+}
+
+/* mobile */
+@include mobile {
+  .collection-wordmark {
+    top: 32%;
+    width: 92vw;
+  }
+}
+
+@include reduced-motion {
+  .blob,
+  .collection-wordmark {
+    opacity: 1;
+  }
+
+  .blob-drift {
+    transform: none !important;
+  }
+}

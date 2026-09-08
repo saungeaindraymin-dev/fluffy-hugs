@@ -1,0 +1,71 @@
+@use "./tokens" as *;
+
+.human {
+  --human-scale: 0.34;
+  position: absolute;
+  left: 50%;
+  top: 72%;
+  z-index: 3;
+  pointer-events: none;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+
+.human-stage {
+  position: relative;
+  width: 1000px;
+  height: 1700px;
+  transform: translate(-50%, -50%) rotate(-78deg) scale(var(--human-scale, 0.34));
+  transform-origin: 50% 50%;
+}
+
+.part {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1000px;
+  height: 1700px;
+}
+
+.part img {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1000px;
+  height: 1700px;
+}
+
+.z0 { z-index: 0; }
+.z1 { z-index: 1; }
+.z2 { z-index: 2; }
+.z3 { z-index: 3; }
+.z4 { z-index: 4; }
+
+.human-legs {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1200px;
+  height: 1900px;
+  overflow: visible;
+}
+
+.human-legs path {
+  fill: none;
+  stroke: #203d99;
+  stroke-width: 240;
+  stroke-linecap: butt;
+  stroke-linejoin: round;
+}
+
+@include tablet {
+  .human {
+    --human-scale: 0.26;
+  }
+}
+
+@include mobile {
+  .human {
+    --human-scale: 0.19;
+  }
+}

@@ -1,0 +1,86 @@
+@use "./tokens" as *;
+
+.hero {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--hero-bg);
+  --tile: clamp(320px, 40vw, 560px);
+  --girl-w: min(calc(var(--tile) * 1.6), 60vw);
+}
+
+.hero-wall {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  will-change: transform;
+}
+
+.row {
+  position: relative;
+  display: flex;
+  flex: 0 0 auto;
+  align-items: flex-start;
+}
+
+.row + .row {
+  margin-top: calc(var(--tile) * -0.68);
+}
+
+.row:nth-child(even) {
+  margin-left: calc(var(--tile) * -0.275);
+}
+
+.tile {
+  flex: 0 0 var(--tile);
+  width: var(--tile);
+  aspect-ratio: 1 / 1;
+  margin-right: calc(var(--tile) * -0.45);
+}
+
+.tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; 
+  display: block;
+  transform: scale(1.3);
+  transition: transform 0.35s ease;
+}
+
+.tile:hover img {
+  transform: scale(1.38);
+}
+
+.hero-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: max(0px, calc(50vh - var(--girl-w) * 0.268));
+  pointer-events: none;
+  will-change: transform;
+}
+
+.hero-center img {
+  width: var(--girl-w);
+  height: auto;
+  display: block;
+}
+
+@include tablet {
+  .hero {
+    --tile: clamp(260px, 40vw, 400px);
+  }
+}
+
+@include mobile {
+  .hero {
+    --tile: clamp(190px, 52vw, 280px);
+  }
+}

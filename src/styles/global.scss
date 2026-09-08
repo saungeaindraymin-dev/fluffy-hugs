@@ -1,0 +1,36 @@
+:root {
+  --brand-blue: #2f4fc9;
+  --brand-blue-dark: #233da3;
+  --bg: #ffffff;
+  --hero-bg: #f5f1ea;
+  --collection-bg: #fdf6ec;
+  --text: #1a1aff;
+  --cta-bg: #14142b;
+  --cta-bg-hover: #26264a;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+  background: var(--hero-bg);
+  color: var(--text);
+  font-family:
+    "Poppins",
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
