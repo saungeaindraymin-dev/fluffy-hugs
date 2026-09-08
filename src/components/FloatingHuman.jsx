@@ -17,11 +17,11 @@ const LOOP = 60;
 
 const LEG_FAR = {
   base: { x1: 448, y1: 978, x2: 660, y2: 1326, x3: 572, y3: 1738 },
-  bent: { x2: 532, y2: 1310, x3: 444, y3: 1722 },
+  bent: { x2: 468, y2: 1302, x3: 380, y3: 1714 },
 };
 const LEG_NEAR = {
   base: { x1: 404, y1: 1014, x2: 616, y2: 1362, x3: 528, y3: 1774 },
-  bent: { x2: 488, y2: 1346, x3: 400, y3: 1758 },
+  bent: { x2: 424, y2: 1338, x3: 336, y3: 1750 },
 };
 
 function morphLeg(tl, el, { base, bent }, outF) {
@@ -97,6 +97,7 @@ export default function FloatingHuman() {
         repeat: -1,
         defaults: { ease: "sine.inOut" },
       });
+      tl.timeScale(1.7);
 
       const swing = (el, vars, mid, out) => {
         tl.to(el, { ...vars, duration: F(out) }, 0).to(
@@ -106,16 +107,24 @@ export default function FloatingHuman() {
         );
       };
 
-      swing(armLRef.current, { rotation: -5.242 }, { rotation: 6.758 }, 22);
-      swing(armRRef.current, { rotation: -1 }, { rotation: -14 }, 35);
-      swing(faceRef.current, { rotation: 0 }, { rotation: -3 }, 30);
+      swing(armLRef.current, { rotation: -17 }, { rotation: 6.758 }, 22);
+      swing(armRRef.current, { rotation: 9 }, { rotation: -14 }, 35);
+      swing(faceRef.current, { rotation: 6 }, { rotation: -3 }, 30);
 
       morphLeg(tl, pathNearRef.current, LEG_NEAR, 21);
-      swing(sockNearRef.current, { x: 0, y: 148 }, { x: 144, y: 172 }, 21);
+      swing(sockNearRef.current, { x: -72, y: 136 }, { x: 144, y: 172 }, 21);
 
       morphLeg(tl, pathFarRef.current, LEG_FAR, 23);
-      swing(sockFarRef.current, { x: 44, y: 112 }, { x: 188, y: 136 }, 23);
-      swing(legFarRef.current, { rotation: -21 }, { rotation: 0 }, 23);
+      swing(sockFarRef.current, { x: -28, y: 100 }, { x: 188, y: 136 }, 23);
+      swing(legFarRef.current, { rotation: -33 }, { rotation: 0 }, 23);
+
+      gsap.to(rootRef.current, {
+        y: -26,
+        duration: 0.66,
+        ease: "sine.inOut",
+        yoyo: true,
+        repeat: -1,
+      });
     }, rootRef);
 
     return () => ctx.revert();

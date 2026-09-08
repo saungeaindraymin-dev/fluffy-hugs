@@ -7,21 +7,11 @@ import { AVATARS, CENTER_IMG } from "../assets.js";
 gsap.registerPlugin(ScrollTrigger);
 
 const CENTER_Z = 5;
-
-/* Tiles overlap by 45% horizontally and 68% vertically (see hero.css), so one
-   tile only advances the wall by 0.55x across and 0.32x down. A fixed 7x8 grid
-   therefore cannot cover every viewport: on a 390x844 phone the tile resolved to
-   455px and a row came out 2068px wide, so the screen showed one hugely
-   magnified avatar instead of a mosaic. Size the grid from the tile that CSS
-   actually resolved, plus a couple of tiles of bleed on each edge. */
 const H_PITCH = 0.55;
 const V_PITCH = 0.32;
 
 function measureGrid() {
-  /* Measure a rendered tile, NOT the custom property: getPropertyValue("--tile")
-     hands back the unresolved token ("clamp(190px, 52vw, 280px)"), so parseFloat
-     returns NaN and the grid silently falls back to its default. offsetWidth is
-     layout, so it is not skewed by the wall's reveal scale. */
+
   const tileEl = document.querySelector(".tile");
   const tile = tileEl ? tileEl.offsetWidth : 0;
   if (!tile) return { rows: 7, cols: 8 };
@@ -35,16 +25,26 @@ function measureGrid() {
   };
 }
 
-/* Every tile carrying two infinite tweens is fine at 56 tiles and not fine at
-   140, which is what a tall phone needs. Cap how many actually animate and
-   spread the chosen ones evenly, so the wall still reads as alive without the
-   tween count tracking the grid size. */
-const MAX_ANIMATED = 44;
 
-/* Shared by every tween that scrubs on the hero's range (here, the floating rig
-   and the second screen's wordmark/blobs). A slightly lazier catch-up than the
-   old 0.6 smooths the whole hand-off; they must match or the parts of one move
-   arrive at different times. */
+const rnd = (min, max, seed) => {
+  const x = Math.sin(seed * 12.9898) * 43758.5453;
+  return min + (x - Math.floor(x)) * (max - min);
+};
+
+function tileMotion(r, c) {
+  const s = r * 31 + c * 17;
+  const swayDeg = rnd(4.5, 10, s + 3);
+  return {
+
+    "--float-k": rnd(-0.12, -0.055, s).toFixed(4),
+    "--float-dur": `${rnd(1.0, 1.9, s + 1).toFixed(2)}s`,
+    "--float-delay": `${rnd(-1.9, 0, s + 2).toFixed(2)}s`,
+    "--sway-deg": `${(rnd(0, 1, s + 6) > 0.5 ? swayDeg : -swayDeg).toFixed(2)}deg`,
+    "--sway-dur": `${rnd(1.5, 2.7, s + 4).toFixed(2)}s`,
+    "--sway-delay": `${rnd(-2.7, 0, s + 5).toFixed(2)}s`,
+  };
+}
+
 export const SCRUB = 1;
 
 export default function Hero({ start }) {
@@ -69,6 +69,7 @@ export default function Hero({ start }) {
         Array.from({ length: cols }, (_, c) => ({
           src: AVATARS[(r * 3 + c) % AVATARS.length],
           drop: ((r * 7 + c * 5) % 5) * 0.03,
+          motion: tileMotion(r, c),
         })),
       ),
     [rows, cols],
@@ -80,8 +81,6 @@ export default function Hero({ start }) {
     const prefersReduced = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-
-    const tileEls = wallRef.current.querySelectorAll(".tile");
 
     if (prefersReduced) {
       gsap.set(wallRef.current, { scale: 1 });
@@ -95,28 +94,6 @@ export default function Hero({ start }) {
       overwrite: "auto",
     });
 
-    const step = Math.max(1, Math.ceil(tileEls.length / MAX_ANIMATED));
-    const animated = Array.from(tileEls).filter((_, i) => i % step === 0);
-
-    animated.forEach((tile) => {
-      gsap.to(tile, {
-        y: gsap.utils.random(-42, -20),
-        duration: gsap.utils.random(0.8, 1.35),
-        ease: "sine.inOut",
-        yoyo: true,
-        repeat: -1,
-        delay: gsap.utils.random(0, 0.9),
-      });
-      gsap.to(tile, {
-        rotation: gsap.utils.random(-3.5, 3.5),
-        duration: gsap.utils.random(1.6, 2.6),
-        ease: "sine.inOut",
-        yoyo: true,
-        repeat: -1,
-        delay: gsap.utils.random(0, 1.2),
-      });
-    });
-
     gsap.to(centerImgRef.current, {
       y: -44,
       duration: 1.05,
@@ -128,7 +105,6 @@ export default function Hero({ start }) {
 
     return () => {
       gsap.killTweensOf(wallRef.current);
-      gsap.killTweensOf(tileEls);
       gsap.killTweensOf(centerImgRef.current);
     };
   }, [start, rows, cols]);
@@ -141,14 +117,6 @@ export default function Hero({ start }) {
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    /* One timeline instead of two linear tweens, so the dolly and the fade can
-       run on different curves and different windows.
-
-       The crowd now clears by 60% of the range while the zoom keeps going. It
-       used to fade linearly across the whole range, which meant that at 30% the
-       resting girl was already fully opaque on top of a crowd still at 70% —
-       both readings of the character on screen at once. power2.in also gives the
-       dolly an accelerating push toward the camera rather than a constant rate. */
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: ".hero",
@@ -203,9 +171,14 @@ export default function Hero({ start }) {
               <div
                 className="tile"
                 key={c}
-                style={{ marginTop: `calc(var(--tile) * ${cell.drop})` }}
+                style={{
+                  marginTop: `calc(var(--tile) * ${cell.drop})`,
+                  ...cell.motion,
+                }}
               >
-                <img src={cell.src} alt="" decoding="async" />
+                <span className="tile-inner">
+                  <img src={cell.src} alt="" decoding="async" />
+                </span>
               </div>
             ))}
           </div>

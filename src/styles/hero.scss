@@ -36,11 +36,33 @@
   margin-left: calc(var(--tile) * -0.275);
 }
 
+@keyframes tile-float {
+  to {
+    transform: translate3d(0, calc(var(--tile) * var(--float-k)), 0);
+  }
+}
+
+@keyframes tile-sway {
+  to {
+    transform: rotate(var(--sway-deg));
+  }
+}
+
 .tile {
   flex: 0 0 var(--tile);
   width: var(--tile);
   aspect-ratio: 1 / 1;
   margin-right: calc(var(--tile) * -0.45);
+  animation: tile-float var(--float-dur) cubic-bezier(0.45, -0.35, 0.55, 1.35)
+    var(--float-delay) infinite alternate;
+}
+
+.tile-inner {
+  display: block;
+  width: 100%;
+  height: 100%;
+  animation: tile-sway var(--sway-dur) cubic-bezier(0.45, -0.2, 0.55, 1.2)
+    var(--sway-delay) infinite alternate;
 }
 
 .tile img {
@@ -82,5 +104,12 @@
 @include mobile {
   .hero {
     --tile: clamp(190px, 52vw, 280px);
+  }
+}
+
+@include reduced-motion {
+  .tile,
+  .tile-inner {
+    animation: none;
   }
 }
