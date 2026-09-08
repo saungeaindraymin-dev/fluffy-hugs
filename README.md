@@ -17,7 +17,6 @@
 
 - **Rigged character:** I recreated the character animation by mapping each Lottie layer to a DOM element. The positioning, rotation, scaling, and transform origins are handled with CSS transforms to match the original Lottie animation as closely as possible. I also used nested DOM elements to reproduce the parenting structure from After Effects, with the layer order reversed to match how the original animation is structured.
 
-For the legs, I used an SVG polyline and animate the knee and ankle positions directly. The idle animation runs as a single 2-second GSAP timeline instead of having a separate tween for each body part. This is important because the original keyframes aren't perfectly symmetrical, so using individual looping animations would slowly make the limbs fall out of sync and change the pose over time.
 
 - **Continuous bubble field:** The bubbles run independently from the scroll animation. Eight bubbles continuously move from the bottom of the screen to the top, with different speeds and starting positions so they don't bunch together. Each bubble travels far enough to completely leave the section before restarting, which keeps the loop seamless without any visible jump.
 I also separated each bubble into its own image and cropped it to the actual artwork bounds. The original sprite sheets had some sizing issues, where one shape was clipped and parts of neighboring shapes showed through. Using individual assets fixed those problems and gave each bubble cleaner positioning.
@@ -26,7 +25,7 @@ I also separated each bubble into its own image and cropped it to the actual art
 
 - **Performance and motion preferences:** The animations mainly use transform and opacity, which helps avoid unnecessary layout recalculations and repaints. I also capped the number of animated tiles at 44, regardless of how many tiles are needed to fill the screen. For example, a phone might need 91 tiles to cover the viewport, but it won't create hundreds of separate animations for them.
 
-I also added support for prefers-reduced-motion. When a user has reduced motion enabled, the idle animations and bubble movement aren't created, and elements that would normally animate into position are placed directly in their final state.
+
 
 ## Tech Stack
 
@@ -95,4 +94,4 @@ The brief asks for reasonable assumptions to be documented where requirements ar
 Responsive behaviour was confirmed by measuring layout geometry at 390×844, 820×1180, and 1440×900 — tile size, grid dimensions, and full viewport coverage at each. The deployed build was checked for asset integrity (0 broken images of 40). Animation timing was verified by scrubbing the GSAP timelines and reading back computed transforms rather than by eye.
 
 Together the three screens cover the full brief: a genuine loading gate, a scroll-scrubbed transition between sections, and continuous idle motion that keeps running once the visitor stops scrolling.
-# fluffy-hugs
+
