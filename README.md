@@ -80,17 +80,6 @@ npm run build
 | Hero           | Gapless interlocking mosaic, runtime-sized grid, pointer parallax, scroll-driven dolly    |
 | Collection     | Scroll hand-off from the hero, DOM-rigged floating character, continuous rising bubbles   |
 
-## Assumptions
-
-The brief asks for reasonable assumptions to be documented where requirements are open.
-
-- **No smooth-scroll library.** Lenis / Locomotive were suggested but optional, and both replace native scrolling with a rAF-interpolated transform — which adds input latency, breaks native anchor and keyboard scrolling, and is a real accessibility cost on a two-screen page. The smoothness that actually matters here is the transition between screens, and that comes from ScrollTrigger's `scrub`, which eases the animation's catch-up to the scroll position rather than the scrolling itself. Every tween that scrubs on the hero's range shares one `SCRUB` constant so the parts of a single move stay in step.
-- **Kept the reference's artwork.** The brief allows swapping in your own assets; using the original made animation fidelity checkable against the live site frame by frame, which was the point of the exercise.
-- **Implemented the recommended three sections** — loading screen, hero, and one collection section — since that set exercises load, scroll, hover, and idle motion.
-- **CTAs and social buttons don't navigate.** They have hover states as required, but no destinations, per the "no working CTAs" scope note.
-- **The loading screen gates on real asset readiness**, not a fixed timer, to satisfy the "slow asset loading should be covered by the loading state" edge case. It waits for load *and* decode, with a 2s per-image decode cap and a 12s batch cap so a stalled asset can never trap the visitor.
-- **Only three of the reference's ~7 sections exist.** Roadmap, FAQ, and team are out of scope.
-
 ### Verification notes
 
 Responsive behaviour was confirmed by measuring layout geometry at 390×844, 820×1180, and 1440×900 — tile size, grid dimensions, and full viewport coverage at each. The deployed build was checked for asset integrity (0 broken images of 40). Animation timing was verified by scrubbing the GSAP timelines and reading back computed transforms rather than by eye.
